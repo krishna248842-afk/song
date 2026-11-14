@@ -1,0 +1,10 @@
+{
+  "appId": "com.listen.personal",
+  "appName": "Listen",
+  "webDir": "dist",
+  "backgroundColor": "#101211",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true
+  }
+}

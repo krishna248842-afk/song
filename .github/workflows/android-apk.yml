@@ -1,0 +1,64 @@
+name: Build Listen Android APK
+
+on:
+  push:
+    branches: [main, 'arena/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build installable debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android platform
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build web app and sync Capacitor assets
+        run: npm run android:sync
+
+      - name: Assemble APK
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Listen-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Make the APK available in the current branch workspace
+        if: github.ref == 'refs/heads/arena/06d427b2-song'
+        run: |
+          install -D android/app/build/outputs/apk/debug/app-debug.apk artifacts/Listen.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f artifacts/Listen.apk
+          git commit -m "Add downloadable Listen Android APK"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101211" />
+    <meta name="description" content="Listen is your private, offline-ready music library." />
+    <link rel="icon" href="./icons/listen-mark.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Listen — your music, yours</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="./" aria-label="Listen home" data-view="home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span>listen<span class="brand-period">.</span></span>
+        </a>
+        <nav class="side-nav" aria-label="Library">
+          <button class="nav-link is-active" data-view="home"><span class="nav-icon" data-icon="home"></span><span>Home</span></button>
+          <button class="nav-link" data-view="search"><span class="nav-icon" data-icon="search"></span><span>Search</span></button>
+          <button class="nav-link" data-view="library"><span class="nav-icon" data-icon="library"></span><span>Your library</span></button>
+          <button class="nav-link" data-view="downloads"><span class="nav-icon" data-icon="download"></span><span>Downloads</span><span class="nav-count" id="download-count">0</span></button>
+        </nav>
+        <div class="sidebar-rule"></div>
+        <div class="sidebar-heading-row">
+          <p class="sidebar-label">YOUR COLLECTION</p>
+          <button class="icon-button tiny-button" data-action="create-playlist" aria-label="Create playlist" title="Create playlist"><span data-icon="plus"></span></button>
+        </div>
+        <nav id="sidebar-playlists" class="playlist-nav" aria-label="Your playlists"></nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-footer">
+          <div class="local-badge"><span class="online-dot"></span><span>Private by design</span></div>
+          <p>Stored on this device.<br />No account. No tracking.</p>
+        </div>
+      </aside>
+
+      <div class="main-column">
+        <header class="topbar">
+          <div class="topbar-search-wrap">
+            <span class="search-icon" data-icon="search" aria-hidden="true"></span>
+            <input id="global-search" type="search" autocomplete="off" placeholder="What do you want to listen to?" aria-label="Search your library" />
+            <button id="clear-search" class="clear-search" data-action="clear-search" aria-label="Clear search" hidden>×</button>
+            <kbd class="search-shortcut">⌘ K</kbd>
+          </div>
+          <div class="topbar-actions">
+            <div class="connection-pill" id="connection-status"><span class="connection-dot"></span><span>On this device</span></div>
+            <button id="offline-toggle" class="offline-toggle" type="button" aria-pressed="false" title="Use only on-device music">
+              <span class="toggle-track"><span class="toggle-knob"></span></span><span>Offline</span>
+            </button>
+            <button id="install-button" class="install-button" type="button" hidden><span data-icon="install"></span><span>Install app</span></button>
+          </div>
+        </header>
+        <main id="main-view" class="main-view" tabindex="-1" aria-live="polite">
+          <div class="loading-skeleton" role="status" aria-label="Loading your library">
+            <div class="skeleton-label"></div><div class="skeleton-title"></div><div class="skeleton-hero"></div>
+            <div class="skeleton-section"><i></i><i></i><i></i><i></i></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="bottom-nav-link is-active" data-view="home"><span data-icon="home"></span><span>Home</span></button>
+      <button class="bottom-nav-link" data-view="search"><span data-icon="search"></span><span>Search</span></button>
+      <button class="bottom-nav-link" data-view="library"><span data-icon="library"></span><span>Library</span></button>
+      <button class="bottom-nav-link" data-view="downloads"><span data-icon="download"></span><span>Downloads</span></button>
+    </nav>
+
+    <section id="player-bar" class="player-bar" aria-label="Music player"></section>
+    <div id="overlay-root"></div>
+    <div id="toast-root" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+    <input id="file-picker" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac,.lrc" multiple hidden />
+    <input id="folder-picker" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac,.lrc" webkitdirectory directory multiple hidden />
+    <input id="relink-picker" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac" hidden />
+    <audio id="audio" preload="metadata"></audio>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
