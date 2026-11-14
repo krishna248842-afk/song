@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-apk:
@@ -52,3 +52,13 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Make the APK available in the current branch workspace
+        if: github.ref == 'refs/heads/arena/06d427b2-song'
+        run: |
+          install -D android/app/build/outputs/apk/debug/app-debug.apk artifacts/Listen.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f artifacts/Listen.apk
+          git commit -m "Add downloadable Listen Android APK"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
